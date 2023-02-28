@@ -1,5 +1,5 @@
 /* global global, window, module */
-const { sha3_512: sha3 } = require("@noble/hashes/sha3");
+const { sha3_512: sha3 } = require("js-sha3");
 
 const defaultLength = 24;
 const bigLength = 32;
@@ -13,25 +13,10 @@ const createEntropy = (length = 4, random = Math.random) => {
   return entropy;
 };
 
-/*
- * Adapted from https://github.com/juanelas/bigint-conversion
- * MIT License Copyright (c) 2018 Juan Hernández Serrano
- */
-function bufToBigInt(buf) {
-  let bits = 8n;
-
-  let value = 0n;
-  for (const i of buf.values()) {
-    const bi = BigInt(i);
-    value = (value << bits) + bi;
-  }
-  return value;
-}
-
 const hash = (input = "") => {
   // Drop the first character because it will bias the histogram
   // to the left.
-  return bufToBigInt(sha3(input)).toString(36).slice(1);
+  return sha3(input).toString(36).slice(1);
 };
 
 const alphabet = Array.from({ length: 26 }, (x, i) =>
@@ -120,7 +105,6 @@ const isCuid = (id, { minLength = 2, maxLength = bigLength } = {}) => {
 module.exports.getConstants = () => ({ defaultLength, bigLength });
 module.exports.init = init;
 module.exports.createId = createId;
-module.exports.bufToBigInt = bufToBigInt;
 module.exports.createCounter = createCounter;
 module.exports.createFingerprint = createFingerprint;
 module.exports.isCuid = isCuid;

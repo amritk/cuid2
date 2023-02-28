@@ -4,7 +4,6 @@ const {
   init,
   getConstants,
   createCounter,
-  bufToBigInt,
   createFingerprint,
   isCuid,
 } = require("./index");
@@ -80,32 +79,6 @@ describe("createCounter", async (assert) => {
     actual,
     expected,
   });
-});
-
-describe("bufToBigInt", async (assert) => {
-  {
-    const actual = bufToBigInt(new Uint8Array(2));
-    const expected = BigInt(0);
-
-    assert({
-      given: "an empty Uint8Array",
-      should: "return 0",
-      actual,
-      expected,
-    });
-  }
-
-  {
-    const actual = bufToBigInt(new Uint8Array([0xff, 0xff, 0xff, 0xff]));
-    const expected = BigInt("4294967295");
-
-    assert({
-      given: "a maximum-value Uint32Array",
-      should: "return 2^32 - 1",
-      actual,
-      expected,
-    });
-  }
 });
 
 describe("createFingerprint", async (assert) => {
